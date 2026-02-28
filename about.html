@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — BaconTileSetter</title>
+  <link rel="icon" type="image/png" href="Image/Favicon.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="navbar">
+    <a href="index.html" class="logo">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="9" height="9" rx="1.5" fill="var(--accent)"/>
+        <rect x="12" y="1" width="9" height="9" rx="1.5" fill="var(--accent-dim)"/>
+        <rect x="1" y="12" width="9" height="9" rx="1.5" fill="var(--accent-dim)"/>
+        <rect x="12" y="12" width="9" height="9" rx="1.5" fill="var(--accent)"/>
+      </svg>
+      BaconTileSetter
+    </a>
+
+    <div class="nav-right" id="nav-right">
+      <nav class="nav-links">
+        <a href="about.html" class="active" data-i18n="nav.about">About</a>
+        <a href="contact.html" data-i18n="nav.contact">Contact</a>
+        <a href="terms.html" data-i18n="nav.terms">Terms</a>
+      </nav>
+      <button class="lang-cycle" id="lang-cycle" aria-label="Switch language">EN</button>
+    </div>
+
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="static-page">
+    <div class="static-content">
+      <h1 data-i18n="about.title">About</h1>
+
+      <section>
+        <h2 data-i18n="about.tool.title">About This Tool</h2>
+        <p data-i18n="about.tool.body">BaconTileSetter is a free, browser-based tileset generator for game developers. Upload 5 tile images and generate a complete spritesheet for 16-tile, 47-tile autotile, or Wang tile systems — entirely in your browser, with no data sent to any server.</p>
+      </section>
+
+      <section>
+        <h2 data-i18n="about.dev.title">Developer</h2>
+        <dl class="about-dl">
+          <dt data-i18n="about.dev.name.label">Name</dt>
+          <dd>iroiro</dd>
+          <dt>X</dt>
+          <dd><a href="https://x.com/iroiro_GameDev" target="_blank" rel="noopener">@iroiro_GameDev</a></dd>
+          <dt data-i18n="about.dev.email.label">Email</dt>
+          <dd><a href="mailto:tadayohu@gmail.com">tadayohu@gmail.com</a></dd>
+        </dl>
+      </section>
+
+      <section>
+        <h2 data-i18n="about.license.title">License</h2>
+        <ul>
+          <li data-i18n="about.license.free">This tool is free to use.</li>
+          <li data-i18n="about.license.ownership">Generated content belongs entirely to you.</li>
+          <li data-i18n="about.license.warranty">No warranty is provided.</li>
+          <li data-i18n="about.license.credit">No credit is required.</li>
+        </ul>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p data-i18n="footer.license">Generated content belongs to the user. No warranty. No credit required.</p>
+    <p>© 2024 <a href="about.html">iroiro</a></p>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

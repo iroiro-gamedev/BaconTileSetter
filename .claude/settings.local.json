@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/taday/.claude/projects/c--Users-taday-WebServices-BaconTileSetter/memory/**)",
+      "Bash(xxd i18n/zh.json)",
+      "Bash(node -e \"const fs=require\\(''fs''\\); try { JSON.parse\\(fs.readFileSync\\(''i18n/zh.json'',''utf8''\\)\\); console.log\\(''VALID JSON, keys:'', Object.keys\\(JSON.parse\\(fs.readFileSync\\(''i18n/zh.json'',''utf8''\\)\\)\\).length\\); } catch\\(e\\) { console.error\\(''INVALID:'', e.message\\); }\")",
+      "Bash(python3 -c \"import json; data=json.load\\(open\\(''i18n/zh.json'',encoding=''utf-8''\\)\\); print\\(''VALID, keys:'', len\\(data\\)\\)\")",
+      "Bash(python -c \"import json; data=json.load\\(open\\(''i18n/zh.json'',encoding=''utf-8''\\)\\); print\\(''VALID, keys:'', len\\(data\\)\\)\")",
+      "Bash(powershell -Command \"try { $null = [System.IO.File]::ReadAllText\\(''C:\\\\Users\\\\taday\\\\WebServices\\\\BaconTileSetter\\\\i18n\\\\zh.json''\\) | ConvertFrom-Json; Write-Host ''VALID'' } catch { Write-Host ''INVALID:'' $_.Exception.Message }\")",
+      "Bash(powershell.exe -Command \"Get-Content ''C:\\\\Users\\\\taday\\\\WebServices\\\\BaconTileSetter\\\\i18n\\\\zh.json'' -Raw | ConvertFrom-Json | Out-Null; Write-Host ''VALID JSON''\")",
+      "Bash(powershell.exe -Command \"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $content = [System.IO.File]::ReadAllText\\(''C:\\\\Users\\\\taday\\\\WebServices\\\\BaconTileSetter\\\\i18n\\\\zh.json'', [System.Text.Encoding]::UTF8\\); try { $null = $content | ConvertFrom-Json; Write-Host ''VALID JSON'' } catch { Write-Host \\(''INVALID: '' + $_.Exception.Message\\) }\")",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\taday\\\\WebServices\\\\BaconTileSetter\\\\validate_json.ps1\")",
+      "Bash(xxd /c/Users/taday/WebServices/BaconTileSetter/i18n/zh.json)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\taday\\.claude\\projects\\c--Users-taday-WebServices-BaconTileSetter\\memory"
+    ]
+  }
+}

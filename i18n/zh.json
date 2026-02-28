@@ -1,0 +1,66 @@
+{
+  "nav.about":   "关于",
+  "nav.contact": "联系我们",
+  "nav.terms":   "使用条款",
+
+  "section.upload":   "上传图片",
+  "section.settings": "设置",
+
+  "uploader.hint":   "点击或拖放图片到各插槽进行上传。",
+  "uploader.main":   "主图",
+  "uploader.top":    "上边缘",
+  "uploader.bottom": "下边缘",
+  "uploader.left":   "左边缘",
+  "uploader.right":  "右边缘",
+
+  "name.label": "名称",
+
+  "algorithm.label": "算法",
+  "algorithm.16":   "16格相邻图块",
+  "algorithm.47":   "47格自动图块",
+
+  "tilesize.label": "图块大小（像素）",
+
+  "preview.title": "相邻预览",
+  "preview.hint":  "上传图片后自动更新。",
+
+  "export.title":  "精灵图",
+  "export.png":   "导出 PNG",
+  "export.unity": "导出 Unity 包",
+
+  "zoom.in":    "+",
+  "zoom.out":   "−",
+  "zoom.reset": "1×",
+
+  "footer.license": "生成的内容归用户所有，不提供担保，无需署名。",
+
+  "about.title":             "关于",
+  "about.tool.title":        "工具介绍",
+  "about.tool.body":         "BaconTileSetter 是一款免费的浏览器端图块集生成工具，专为游戏开发者设计。上传 5 张图块图片，即可在浏览器中生成 16 格或 47 格自动图块的完整精灵图，无需任何数据上传至服务器。",
+  "about.dev.title":         "开发者",
+  "about.dev.name.label":    "姓名",
+  "about.dev.email.label":   "邮箱",
+  "about.license.title":     "许可证",
+  "about.license.free":      "本工具免费使用。",
+  "about.license.ownership": "生成的内容完全归用户所有。",
+  "about.license.warranty":  "不提供任何担保。",
+  "about.license.credit":    "无需署名。",
+
+  "contact.title":         "联系我们",
+  "contact.intro":         "如有 Bug 反馈、功能建议或其他问题，请通过邮件或 X（Twitter）联系。",
+  "contact.email.label":   "邮箱",
+  "contact.x.label":       "X（Twitter）",
+  "contact.note":          "本工具无后端服务，您上传的图片不会离开您的浏览器。",
+
+  "terms.title":              "使用条款",
+  "terms.use.title":          "使用说明",
+  "terms.use.body":           "BaconTileSetter 可供个人和商业用途免费使用。您可以将本工具生成的图块集用于任何项目，包括商业游戏，不受任何限制。",
+  "terms.ownership.title":    "生成内容归属",
+  "terms.ownership.body":     "所有生成的内容（PNG 精灵图、JSON 元数据）完全归生成者所有，开发者不主张任何权利。",
+  "terms.warranty.title":     "免责声明",
+  "terms.warranty.body":      "本工具按\"现状\"提供，不提供任何明示或默示的担保。开发者对因使用或无法使用本工具而造成的任何损失概不负责。",
+  "terms.privacy.title":      "隐私说明",
+  "terms.privacy.body":       "BaconTileSetter 完全在您的浏览器中运行，不会将图片、文件或个人数据上传至任何服务器。仅语言偏好会存储在浏览器本地。",
+  "terms.credit.title":       "署名要求",
+  "terms.credit.body":        "使用生成内容时，无需对 BaconTileSetter 进行任何形式的署名。"
+}

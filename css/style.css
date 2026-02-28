@@ -1,0 +1,538 @@
+/* ─────────────────────────────────────────
+   CSS Custom Properties — Dark Theme
+   ───────────────────────────────────────── */
+:root {
+  --bg-base:       #0f0f0f;
+  --bg-surface:    #1a1a1a;
+  --bg-raised:     #242424;
+  --bg-hover:      #2c2c2c;
+  --border:        #2e2e2e;
+  --border-focus:  #f97316;
+  --accent:        #f97316;
+  --accent-dim:    #7c3a12;
+  --accent-hover:  #ea6c0a;
+  --text-primary:  #e8e8e8;
+  --text-secondary:#999999;
+  --text-muted:    #555555;
+  --danger:        #ef4444;
+  --success:       #22c55e;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --shadow:    0 4px 20px rgba(0,0,0,0.6);
+  --font: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+/* ─────────────────────────────────────────
+   Reset & Base
+   ───────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.6;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); text-decoration: underline; }
+h1 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; margin-bottom: 1.2rem; }
+h2 { font-size: clamp(0.95rem, 2vw, 1.15rem); font-weight: 600; }
+ul { padding-left: 1.4rem; }
+ul li { margin-bottom: 0.4rem; color: var(--text-secondary); }
+
+/* ─────────────────────────────────────────
+   Navbar
+   ───────────────────────────────────────── */
+.navbar {
+  display: flex;
+  align-items: center;
+  padding: 0 1.25rem;
+  height: 52px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-right: auto; /* pushes nav-right to the far right */
+}
+.logo:hover { color: var(--accent); text-decoration: none; }
+
+/* Groups nav links + lang button on the right */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+.nav-links a {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.15s;
+  white-space: nowrap;
+}
+.nav-links a:hover,
+.nav-links a.active { color: var(--accent); }
+
+/* Single cycling language button */
+.lang-cycle {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: var(--font);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: color 0.12s, border-color 0.12s;
+  flex-shrink: 0;
+}
+.lang-cycle:hover { color: var(--accent); border-color: var(--accent); }
+
+/* Hamburger — hidden on desktop */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  flex-shrink: 0;
+  margin-left: 0.75rem;
+}
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text-primary);
+  border-radius: 2px;
+  transition: transform 0.22s ease, opacity 0.22s ease;
+  transform-origin: center;
+}
+.navbar.nav-open .hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.navbar.nav-open .hamburger span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.navbar.nav-open .hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ─────────────────────────────────────────
+   App Layout
+   ───────────────────────────────────────── */
+.app-layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  align-self: stretch;
+}
+
+/* ─────────────────────────────────────────
+   Panels
+   ───────────────────────────────────────── */
+.panel { background: var(--bg-base); padding: 1.5rem; }
+.panel-title {
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.panel-hint { font-size: 0.8rem; color: var(--text-muted); margin: 0.4rem 0 1rem; }
+
+/* ─────────────────────────────────────────
+   Upload Panel — Dropzones
+   ───────────────────────────────────────── */
+.upload-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-top: 0.5rem;
+}
+
+/*
+ * DROPZONE STRUCTURE:
+ *
+ *  <div.dropzone>            ← outer div: drag target, border styling
+ *    <label.dz-click>        ← absolute fill: click opens file dialog (via `for`)
+ *      <canvas.dz-bg>        ← faint background image (35% opacity)
+ *      <span.dz-name>        ← slot name (top center, always visible)
+ *      <div.dz-empty>        ← placeholder icon (hidden when has-image)
+ *    </label>
+ *    <div.dz-controls>       ← transform buttons (z-index above label)
+ *    <input[type=file]>      ← hidden, linked via label `for`
+ *  </div>
+ *
+ * WHY div (not label) as outer:
+ *   Drag events on a <label> containing <input[type=file]> can behave
+ *   inconsistently across browsers. A plain <div> as the drop target is
+ *   fully reliable. The label handles click→file-dialog natively.
+ */
+.dropzone {
+  position: relative;
+  background: var(--bg-raised);
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius-md);
+  min-height: 120px;
+  overflow: hidden;
+  transition: border-color 0.15s, background 0.15s;
+  user-select: none;
+}
+.dropzone:hover { border-color: var(--accent-dim); }
+.dropzone.drag-over {
+  border-color: var(--accent);
+  border-style: solid;
+  background: rgba(249, 115, 22, 0.09);
+}
+
+/* Label fills entire zone — click anywhere opens file dialog */
+.dz-click {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1;
+  /* reset label default inline display */
+  font: inherit;
+  color: inherit;
+}
+
+/* Background: uploaded image shown faintly.
+ * Visibility is controlled by opacity (not the `hidden` attribute) so that
+ * author CSS `display:block` cannot fight the UA `[hidden]{display:none}` rule.
+ * JS adds `.has-image` to the outer .dropzone to reveal it. */
+.dz-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.dropzone.has-image .dz-bg { opacity: 0.38; }
+
+/* Slot name — always at top center */
+.dz-name {
+  position: absolute;
+  top: 5px;
+  left: 0; right: 0;
+  text-align: center;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  pointer-events: none; /* let clicks pass to label */
+  z-index: 2;
+  transition: color 0.15s, text-shadow 0.15s;
+}
+.dropzone.has-image .dz-name {
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+/* Placeholder icon (hidden when image loaded) */
+.dz-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 0.5rem 2rem; /* extra bottom padding to avoid overlap with name */
+}
+.dropzone.has-image .dz-empty { display: none; }
+
+.dz-icon-char {
+  font-size: 1.6rem;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+/* Transform controls bar — at bottom, above label */
+.dz-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  display: none;
+  background: rgba(0, 0, 0, 0.72);
+  padding: 3px 4px;
+  gap: 3px;
+  justify-content: center;
+  align-items: center;
+  z-index: 5; /* above .dz-click (z-index:1) */
+}
+.dropzone.has-image .dz-controls { display: flex; }
+
+/* Transform buttons */
+.tf-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.75);
+  width: 22px;
+  height: 22px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font);
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+}
+.tf-btn:hover { background: rgba(249, 115, 22, 0.5); color: #fff; border-color: var(--accent); }
+.tf-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* ─────────────────────────────────────────
+   Settings Panel
+   ───────────────────────────────────────── */
+.settings-panel { display: flex; flex-direction: column; gap: 1.2rem; }
+
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+.field-group > label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+select, input[type="number"] {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  font-family: var(--font);
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s;
+}
+select:focus, input[type="number"]:focus { border-color: var(--border-focus); }
+
+/* ─────────────────────────────────────────
+   Buttons
+   ───────────────────────────────────────── */
+.btn-secondary {
+  background: var(--bg-raised);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.btn-secondary:hover { border-color: var(--accent); background: var(--bg-hover); }
+
+/* ─────────────────────────────────────────
+   Status
+   ───────────────────────────────────────── */
+.status-msg {
+  font-size: 0.8rem;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+.status-msg.success { border-color: var(--success); color: var(--success); }
+.status-msg.error   { border-color: var(--danger);  color: var(--danger);  }
+
+/* ─────────────────────────────────────────
+   Preview & Export Panels
+   ───────────────────────────────────────── */
+.preview-panel, .export-panel { grid-column: span 2; }
+
+.canvas-wrap {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  overflow: auto;
+  max-height: 420px;
+  display: flex;
+  align-items: flex-start;
+  margin-top: 0.5rem;
+}
+.spritesheet-wrap { max-height: 320px; }
+
+#preview-canvas, #spritesheet-canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  display: block;
+}
+
+.export-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1rem; }
+
+/* ─────────────────────────────────────────
+   Zoom Bar
+   ───────────────────────────────────────── */
+.zoom-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 0.75rem;
+}
+
+.zoom-btn {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-family: var(--font);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: border-color 0.12s, color 0.12s;
+  flex-shrink: 0;
+}
+.zoom-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.zoom-label {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  min-width: 2.4rem;
+  text-align: center;
+}
+
+.zoom-reset {
+  width: auto;
+  padding: 0 6px;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+/* ─────────────────────────────────────────
+   Footer
+   ───────────────────────────────────────── */
+.footer {
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  padding: 1rem 1.5rem;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.footer a { color: var(--text-secondary); }
+.footer a:hover { color: var(--accent); }
+
+/* ─────────────────────────────────────────
+   Static Pages
+   ───────────────────────────────────────── */
+.static-page { flex: 1; display: flex; justify-content: center; padding: 3rem 1.5rem; }
+.static-content { max-width: 680px; width: 100%; }
+.static-content section { margin-bottom: 2.5rem; }
+.static-content h2 {
+  margin-bottom: 0.7rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.static-content p { color: var(--text-secondary); line-height: 1.75; }
+
+.about-dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 1.5rem;
+  font-size: 0.9rem;
+}
+.about-dl dt { color: var(--text-muted); font-size: 0.8rem; align-self: center; }
+.about-dl dd { color: var(--text-primary); }
+
+.contact-links { display: flex; flex-direction: column; gap: 12px; margin: 1.5rem 0; }
+.contact-card {
+  display: flex; align-items: center; gap: 1rem;
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 1rem 1.25rem;
+  color: var(--text-primary); text-decoration: none;
+  transition: border-color 0.15s;
+}
+.contact-card:hover { border-color: var(--accent); text-decoration: none; color: var(--text-primary); }
+.contact-card strong { display: block; font-size: 0.9rem; }
+.contact-card span span { font-size: 0.85rem; color: var(--text-secondary); }
+.contact-icon { font-size: 1.4rem; color: var(--accent); width: 32px; text-align: center; flex-shrink: 0; }
+.contact-note {
+  font-size: 0.8rem; color: var(--text-muted); margin-top: 1.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+}
+
+/* ─────────────────────────────────────────
+   Responsive — Tablet (≤900px)
+   ───────────────────────────────────────── */
+@media (max-width: 900px) {
+  .app-layout { grid-template-columns: 1fr; }
+  .preview-panel, .export-panel { grid-column: span 1; }
+  .upload-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ─────────────────────────────────────────
+   Responsive — Mobile (≤680px) + Hamburger
+   ───────────────────────────────────────── */
+@media (max-width: 680px) {
+  .hamburger { display: flex; }
+
+  .nav-right {
+    display: none;
+    position: absolute;
+    top: 52px;
+    left: 0; right: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 1.25rem 1.5rem;
+    gap: 1.25rem;
+    box-shadow: var(--shadow);
+    z-index: 199;
+  }
+  .navbar.nav-open .nav-right { display: flex; }
+  .nav-links { flex-direction: column; gap: 0.9rem; width: 100%; }
+  .nav-links a { font-size: 1rem; }
+  .lang-cycle { align-self: flex-start; }
+
+  .upload-grid { grid-template-columns: repeat(2, 1fr); }
+  .panel { padding: 1rem; }
+  .export-buttons { flex-direction: column; }
+  .export-buttons .btn-secondary { width: 100%; }
+}

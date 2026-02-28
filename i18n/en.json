@@ -1,0 +1,66 @@
+{
+  "nav.about":   "About",
+  "nav.contact": "Contact",
+  "nav.terms":   "Terms",
+
+  "section.upload":   "Upload Images",
+  "section.settings": "Settings",
+
+  "uploader.hint":   "Drop or click each slot to upload a tile image.",
+  "uploader.main":   "Main",
+  "uploader.top":    "Top",
+  "uploader.bottom": "Bottom",
+  "uploader.left":   "Left",
+  "uploader.right":  "Right",
+
+  "name.label": "Name",
+
+  "algorithm.label": "Algorithm",
+  "algorithm.16":    "16-Tile Adjacency",
+  "algorithm.47":    "47-Tile Autotile",
+
+  "tilesize.label": "Tile Size (px)",
+
+  "preview.title": "Adjacency Preview",
+  "preview.hint":  "Updates automatically when images change.",
+
+  "export.title":  "Spritesheet",
+  "export.png":   "Export PNG",
+  "export.unity": "Export Unity Package",
+
+  "zoom.in":    "+",
+  "zoom.out":   "−",
+  "zoom.reset": "1×",
+
+  "footer.license": "Generated content belongs to the user. No warranty. No credit required.",
+
+  "about.title":             "About",
+  "about.tool.title":        "About This Tool",
+  "about.tool.body":         "BaconTileSetter is a free, browser-based tileset generator for game developers. Upload 5 tile images and generate a complete spritesheet for 16-tile or 47-tile autotile systems — entirely in your browser, with no data sent to any server.",
+  "about.dev.title":         "Developer",
+  "about.dev.name.label":    "Name",
+  "about.dev.email.label":   "Email",
+  "about.license.title":     "License",
+  "about.license.free":      "This tool is free to use.",
+  "about.license.ownership": "Generated content belongs entirely to you.",
+  "about.license.warranty":  "No warranty is provided.",
+  "about.license.credit":    "No credit is required.",
+
+  "contact.title":         "Contact",
+  "contact.intro":         "For bug reports, feature requests, or general inquiries, reach out via email or X (Twitter).",
+  "contact.email.label":   "Email",
+  "contact.x.label":       "X (Twitter)",
+  "contact.note":          "This tool has no backend. Your images never leave your browser.",
+
+  "terms.title":              "Terms of Use",
+  "terms.use.title":          "Usage",
+  "terms.use.body":           "BaconTileSetter is provided free of charge for personal and commercial use. You may use the tool to generate tilesets for any project, including commercial games, without restriction.",
+  "terms.ownership.title":    "Ownership of Output",
+  "terms.ownership.body":     "All generated content (PNG spritesheets, JSON metadata) is owned entirely by the user who generated it. No rights are claimed by the developer.",
+  "terms.warranty.title":     "No Warranty",
+  "terms.warranty.body":      "This tool is provided \"as is\" without any warranty of any kind, express or implied. The developer is not liable for any damages arising from the use or inability to use this tool.",
+  "terms.privacy.title":      "Privacy",
+  "terms.privacy.body":       "BaconTileSetter operates entirely in your browser. No images, files, or personal data are uploaded to any server. Your language preference is stored locally in your browser.",
+  "terms.credit.title":       "Attribution",
+  "terms.credit.body":        "No credit or attribution to BaconTileSetter is required when using generated content."
+}

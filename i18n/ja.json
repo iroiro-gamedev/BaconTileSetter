@@ -1,0 +1,66 @@
+{
+  "nav.about":   "このツールについて",
+  "nav.contact": "お問い合わせ",
+  "nav.terms":   "利用規約",
+
+  "section.upload":   "画像をアップロード",
+  "section.settings": "設定",
+
+  "uploader.hint":   "各スロットをクリックまたはドロップして画像をアップロードしてください。",
+  "uploader.main":   "メイン",
+  "uploader.top":    "上端",
+  "uploader.bottom": "下端",
+  "uploader.left":   "左端",
+  "uploader.right":  "右端",
+
+  "name.label": "名前",
+
+  "algorithm.label": "アルゴリズム",
+  "algorithm.16":   "16タイル 隣接タイル",
+  "algorithm.47":   "47タイル オートタイル",
+
+  "tilesize.label": "タイルサイズ（px）",
+
+  "preview.title": "隣接プレビュー",
+  "preview.hint":  "画像が変更されると自動的に更新されます。",
+
+  "export.title":  "スプライトシート",
+  "export.png":   "PNG を出力",
+  "export.unity": "Unity パッケージを出力",
+
+  "zoom.in":    "+",
+  "zoom.out":   "−",
+  "zoom.reset": "1×",
+
+  "footer.license": "生成されたコンテンツはユーザーに帰属します。保証なし。クレジット不要。",
+
+  "about.title":             "このツールについて",
+  "about.tool.title":        "ツール概要",
+  "about.tool.body":         "BaconTileSetterは、ゲーム開発者向けの無料ブラウザベースのタイルセット生成ツールです。5枚のタイル画像をアップロードするだけで、16タイル・47タイルオートタイルのスプライトシートをブラウザ上で生成できます。サーバーへのデータ送信は一切ありません。",
+  "about.dev.title":         "開発者",
+  "about.dev.name.label":    "名前",
+  "about.dev.email.label":   "メール",
+  "about.license.title":     "ライセンス",
+  "about.license.free":      "このツールは無料でご利用いただけます。",
+  "about.license.ownership": "生成されたコンテンツの著作権はユーザーに帰属します。",
+  "about.license.warranty":  "保証は一切提供されません。",
+  "about.license.credit":    "クレジット表記は不要です。",
+
+  "contact.title":         "お問い合わせ",
+  "contact.intro":         "バグ報告・機能要望・その他のお問い合わせはメールまたはX（Twitter）からどうぞ。",
+  "contact.email.label":   "メール",
+  "contact.x.label":       "X（Twitter）",
+  "contact.note":          "このツールにはバックエンドがありません。アップロードした画像がサーバーに送信されることはありません。",
+
+  "terms.title":              "利用規約",
+  "terms.use.title":          "利用について",
+  "terms.use.body":           "BaconTileSetterは個人・商用を問わず無料でご利用いただけます。商業ゲームを含むあらゆるプロジェクトのタイルセット生成にご使用いただけます。",
+  "terms.ownership.title":    "生成物の所有権",
+  "terms.ownership.body":     "生成されたコンテンツ（PNGスプライトシート・JSONメタデータ）の権利はすべてユーザーに帰属します。開発者はいかなる権利も主張しません。",
+  "terms.warranty.title":     "免責事項",
+  "terms.warranty.body":      "本ツールは「現状のまま」提供されます。明示または黙示を問わず、いかなる保証も提供しません。開発者は本ツールの使用または使用不能から生じるいかなる損害についても責任を負いません。",
+  "terms.privacy.title":      "プライバシー",
+  "terms.privacy.body":       "BaconTileSetterはすべてブラウザ上で動作します。画像・ファイル・個人情報がサーバーに送信されることはありません。言語設定のみブラウザのローカルストレージに保存されます。",
+  "terms.credit.title":       "クレジット表記",
+  "terms.credit.body":        "生成されたコンテンツを使用する際、BaconTileSetterへのクレジット表記は不要です。"
+}
