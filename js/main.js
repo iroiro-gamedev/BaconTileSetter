@@ -13,9 +13,13 @@
 
 import { loadLang, applyTranslations, detectLang } from './i18n.js';
 import { initUploaders } from './uploader.js';
-import { renderPreview }  from './preview.js';
+import { renderPreview,
+         PREVIEW_DISPLAY_TS, PREVIEW_PAD, PREVIEW_CP_GAP,
+         PREVIEW_LABEL_H, PREVIEW_GRID_ROWS,
+         previewGridCols }    from './preview.js';
 import { generate }       from './tilegen.js';
 import { exportPNG, exportUnityPackage } from './exporter.js';
+import { initTilemap, renderTilemap } from './tilemap.js';
 
 // ─────────────────────────────────────────────────────────────
 // Constants
@@ -60,10 +64,10 @@ const state = {
   result: null,
 };
 
-// Zoom levels per canvas — persists across re-renders
+// Zoom levels — persist across re-renders
 const zoom = {
-  preview:     ZOOM_DEFAULT,
-  spritesheet: ZOOM_DEFAULT,
+  preview: ZOOM_DEFAULT,
+  tilemap: 1,
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -85,6 +89,8 @@ async function boot() {
   initTransformControls();
   initExportButtons();
   initZoomControls();
+  initTilemap(() => { renderTilemap(state); applyZoom('tilemap'); });
+  initSpritesheetHover();
 
   // Initial preview render (shows placeholder tiles)
   scheduleAutoGenerate();
@@ -320,15 +326,17 @@ function doGenerate() {
   renderPreview(state);
   applyZoom('preview');
 
-  // Only generate + show the full spritesheet when at least one image is loaded
+  // Tilemap re-renders whenever state changes (algorithm / tileSize / images)
+  renderTilemap(state);
+  syncWrapHeight('tilemap-canvas', '.tilemap-canvas-wrap', 380);
+
+  // Only generate + show export buttons when at least one image is loaded
   if (!SLOTS.some(s => state.images[s])) return;
 
   try {
     state.result = generate(state);
-    renderSpritesheet(state.result.canvas);
-    applyZoom('spritesheet');
-    const panel = document.getElementById('export-panel');
-    if (panel) panel.hidden = false;
+    const exportPanel = document.getElementById('export-panel');
+    if (exportPanel) exportPanel.hidden = false;
   } catch (err) {
     console.error('[generate]', err);
   }
@@ -363,7 +371,7 @@ function initExportButtons() {
 
 function initZoomControls() {
   wireZoom('preview');
-  wireZoom('spritesheet');
+  wireZoom('tilemap');
 }
 
 function wireZoom(key) {
@@ -387,18 +395,26 @@ function wireZoom(key) {
 }
 
 /**
- * Scale a canvas's CSS display size by the current zoom level for `key`.
+ * Lock a canvas-wrap's height to the canvas's natural pixel height (+ 2×1rem padding),
+ * capped at maxH. Called after each render so zoom scales within a stable block.
+ */
+function syncWrapHeight(canvasId, wrapSelector, maxH) {
+  const canvas = document.getElementById(canvasId);
+  const wrap   = canvas?.closest(wrapSelector);
+  if (canvas && wrap) {
+    wrap.style.height = Math.min(canvas.height + 32, maxH) + 'px';
+  }
+}
+
+/**
+ * Scale a canvas's CSS display size by the current zoom level.
  * The canvas's backing pixels are unchanged; only the rendered size changes.
  * `image-rendering: pixelated` (set in CSS) keeps tiles crisp.
- *
- * @param {'preview'|'spritesheet'} key
  */
 function applyZoom(key) {
-  const canvasId = key === 'preview' ? 'preview-canvas' : 'spritesheet-canvas';
-  const labelId  = `${key}-zoom-label`;
-  const canvas   = document.getElementById(canvasId);
-  const label    = document.getElementById(labelId);
-  const z        = zoom[key];
+  const canvas = document.getElementById(`${key}-canvas`);
+  const label  = document.getElementById(`${key}-zoom-label`);
+  const z      = zoom[key];
   if (canvas) {
     canvas.style.width  = canvas.width  * z + 'px';
     canvas.style.height = canvas.height * z + 'px';
@@ -407,15 +423,74 @@ function applyZoom(key) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// UI Helpers
+// Preview Hover — Adjacency Tooltip
 // ─────────────────────────────────────────────────────────────
 
-function renderSpritesheet(srcCanvas) {
-  const out = document.getElementById('spritesheet-canvas');
-  if (!out) return;
-  out.width  = srcCanvas.width;
-  out.height = srcCanvas.height;
-  out.getContext('2d').drawImage(srcCanvas, 0, 0);
+function initSpritesheetHover() {
+  const canvas  = document.getElementById('preview-canvas');
+  const tooltip = document.getElementById('tile-tooltip');
+  const ttLabel = document.getElementById('tt-label');
+  if (!canvas || !tooltip) return;
+
+  canvas.addEventListener('mousemove', e => {
+    if (!state.result) { tooltip.hidden = true; return; }
+
+    const { tiles, algorithm } = state.result;
+    const rect   = canvas.getBoundingClientRect();
+    const scaleX = canvas.width  / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const px = (e.clientX - rect.left) * scaleX;
+    const py = (e.clientY - rect.top)  * scaleY;
+
+    // Tile grid starts at (PAD + DISPLAY_TS + CP_GAP, PAD + LABEL_H) in the preview
+    const gridOffsetX = PREVIEW_PAD + PREVIEW_DISPLAY_TS + PREVIEW_CP_GAP;
+    const gridOffsetY = PREVIEW_PAD + PREVIEW_LABEL_H;
+    const ts   = PREVIEW_DISPLAY_TS;
+    const cols = previewGridCols(algorithm);
+
+    const tileX = px - gridOffsetX;
+    const tileY = py - gridOffsetY;
+    if (tileX < 0 || tileY < 0) { tooltip.hidden = true; return; }
+
+    const tileCol = Math.floor(tileX / ts);
+    const tileRow = Math.floor(tileY / ts);
+    if (tileCol >= cols || tileRow >= PREVIEW_GRID_ROWS) { tooltip.hidden = true; return; }
+
+    const tile = tiles[tileRow * cols + tileCol];
+    if (!tile) { tooltip.hidden = true; return; }
+
+    // Decode cardinal + diagonal bits
+    const bm4 = tile.bitmask4 ?? tile.bitmask ?? 0;
+    const bm8 = tile.bitmask8 ?? 0;
+    const hasN  = !!(bm4 & 0x1),  hasE  = !!(bm4 & 0x2);
+    const hasS  = !!(bm4 & 0x4),  hasW  = !!(bm4 & 0x8);
+    const hasNE = !!(bm8 & 0x02), hasSE = !!(bm8 & 0x08);
+    const hasSW = !!(bm8 & 0x20), hasNW = !!(bm8 & 0x80);
+    const is47  = algorithm === '47';
+
+    const posMap = { n: hasN, e: hasE, s: hasS, w: hasW,
+                     ne: hasNE, se: hasSE, sw: hasSW, nw: hasNW };
+
+    tooltip.querySelectorAll('[data-pos]').forEach(cell => {
+      const pos    = cell.dataset.pos;
+      const isDiag = ['ne', 'se', 'sw', 'nw'].includes(pos);
+      cell.className = 'tt-cell';
+      if (!is47 && isDiag) { cell.classList.add('tt-dc'); }
+      else if (posMap[pos]) { cell.classList.add('filled'); }
+    });
+
+    ttLabel.textContent = tile.label ?? `tile-${tile.id}`;
+    tooltip.hidden = false;
+
+    // Position tooltip near the cursor, keeping it inside the viewport
+    const tx = e.clientX + 14;
+    const ty = e.clientY - 10;
+    const tw = 96, th = 86;
+    tooltip.style.left = Math.min(tx, window.innerWidth  - tw - 8) + 'px';
+    tooltip.style.top  = Math.min(ty, window.innerHeight - th - 8) + 'px';
+  });
+
+  canvas.addEventListener('mouseleave', () => { tooltip.hidden = true; });
 }
 
 // ─────────────────────────────────────────────────────────────

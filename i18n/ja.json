@@ -24,13 +24,18 @@
   "preview.title": "隣接プレビュー",
   "preview.hint":  "画像が変更されると自動的に更新されます。",
 
-  "export.title":  "スプライトシート",
+  "export.title":  "出力",
   "export.png":   "PNG を出力",
   "export.unity": "Unity パッケージを出力",
 
   "zoom.in":    "+",
   "zoom.out":   "−",
   "zoom.reset": "1×",
+
+  "tilemap.title": "タイル配置プレビュー",
+  "tilemap.hint":  "クリックまたはドラッグでタイルを配置・削除。ビットマスクは自動更新されます。",
+  "tilemap.clear": "クリア",
+  "tilemap.fill":  "全て埋める",
 
   "footer.license": "生成されたコンテンツはユーザーに帰属します。保証なし。クレジット不要。",
 

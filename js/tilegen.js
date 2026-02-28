@@ -76,14 +76,14 @@ export function composeQuadrants(ctx, tx, ty, ts, bm4, imgs, bm8 = 0) {
   const hasSE = !!(bm8 & 0x08);
   const hasSW = !!(bm8 & 0x20);
 
-  // TL quadrant: affected by N and W; inner corner when N&&W but !NW
-  drawQuadrant(ctx, tx,      ty,      qs, 0, 0, hasN, hasW, imgs.main, imgs.top,    imgs.left,   hasN && hasW && !hasNW);
-  // TR quadrant: affected by N and E; inner corner when N&&E but !NE
-  drawQuadrant(ctx, tx + qs, ty,      qs, 1, 0, hasN, hasE, imgs.main, imgs.top,    imgs.right,  hasN && hasE && !hasNE);
-  // BL quadrant: affected by S and W; inner corner when S&&W but !SW
-  drawQuadrant(ctx, tx,      ty + qs, qs, 0, 1, hasS, hasW, imgs.main, imgs.bottom, imgs.left,   hasS && hasW && !hasSW);
-  // BR quadrant: affected by S and E; inner corner when S&&E but !SE
-  drawQuadrant(ctx, tx + qs, ty + qs, qs, 1, 1, hasS, hasE, imgs.main, imgs.bottom, imgs.right,  hasS && hasE && !hasSE);
+  // TL quadrant: inner corner only in 47-tile (bm8≠0) when N&&W but !NW
+  drawQuadrant(ctx, tx,      ty,      qs, 0, 0, hasN, hasW, imgs.main, imgs.top,    imgs.left,   !!bm8 && hasN && hasW && !hasNW);
+  // TR quadrant: inner corner only in 47-tile (bm8≠0) when N&&E but !NE
+  drawQuadrant(ctx, tx + qs, ty,      qs, 1, 0, hasN, hasE, imgs.main, imgs.top,    imgs.right,  !!bm8 && hasN && hasE && !hasNE);
+  // BL quadrant: inner corner only in 47-tile (bm8≠0) when S&&W but !SW
+  drawQuadrant(ctx, tx,      ty + qs, qs, 0, 1, hasS, hasW, imgs.main, imgs.bottom, imgs.left,   !!bm8 && hasS && hasW && !hasSW);
+  // BR quadrant: inner corner only in 47-tile (bm8≠0) when S&&E but !SE
+  drawQuadrant(ctx, tx + qs, ty + qs, qs, 1, 1, hasS, hasE, imgs.main, imgs.bottom, imgs.right,  !!bm8 && hasS && hasE && !hasSE);
 }
 
 /**
@@ -270,7 +270,7 @@ export function generate16(images, tileSize) {
  *
  * Normalization: diagonal bits cleared when adjacent cardinals not both set.
  */
-function normalize47(b) {
+export function normalize47(b) {
   // NE needs N(0x01) and E(0x04)
   if (!((b & 0x01) && (b & 0x04))) b &= ~0x02;
   // SE needs E(0x04) and S(0x10)

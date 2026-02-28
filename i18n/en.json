@@ -24,13 +24,18 @@
   "preview.title": "Adjacency Preview",
   "preview.hint":  "Updates automatically when images change.",
 
-  "export.title":  "Spritesheet",
+  "export.title":  "Output",
   "export.png":   "Export PNG",
   "export.unity": "Export Unity Package",
 
   "zoom.in":    "+",
   "zoom.out":   "−",
   "zoom.reset": "1×",
+
+  "tilemap.title": "Tile Placement Preview",
+  "tilemap.hint":  "Click or drag to place / remove tiles. Bitmasks update automatically.",
+  "tilemap.clear": "Clear",
+  "tilemap.fill":  "Fill All",
 
   "footer.license": "Generated content belongs to the user. No warranty. No credit required.",
 

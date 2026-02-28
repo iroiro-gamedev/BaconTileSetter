@@ -1,103 +1,117 @@
 /**
  * preview.js — Real-time adjacency preview renderer.
  *
- * Shows:
- *   1. "Common Patterns" row — 4 archetypal tiles (Isolated / H-Strip / V-Strip / Full)
- *      using the quadrant compositor so results match the spritesheet exactly.
- *   2. Full algorithm tile grid — 16-tile (4×4) or 47-tile (8×6),
- *      generated from the same functions used for the export spritesheet.
+ * Layout:
+ *   Left column  — 4 "Common Patterns" tiles stacked vertically
+ *   Right grid   — Full tile set, PREVIEW_GRID_ROWS rows × variable columns
  *
- * When no images are loaded, both sections render placeholder tiles.
+ * All tiles render at a fixed PREVIEW_DISPLAY_TS regardless of state.tileSize,
+ * so the panel stays compact and balanced at any tile resolution.
  */
 
 import { composeQuadrants, generate16, generate47 } from './tilegen.js';
 
-const CANVAS_ID = 'preview-canvas';
-const PAD       = 4;   // px between tiles in the common-patterns row
-const LABEL_H   = 18;  // px for section labels
+// ─────────────────────────────────────────────────────────────
+// Layout constants — also imported by main.js for hover hit-testing
+// ─────────────────────────────────────────────────────────────
+
+export const PREVIEW_DISPLAY_TS = 32;   // Fixed tile display size (px)
+export const PREVIEW_PAD        = 8;    // Outer padding
+export const PREVIEW_CP_GAP     = 10;   // Gap between CP column and tile grid
+export const PREVIEW_LABEL_H    = 14;   // Section label row height
+export const PREVIEW_GRID_ROWS  = 4;    // Tile grid always 4 rows
+
+/** Number of tile grid columns for a given algorithm. */
+export function previewGridCols(algorithm) {
+  return algorithm === '47' ? Math.ceil(47 / PREVIEW_GRID_ROWS) : 4; // 12 or 4
+}
+
+// ─────────────────────────────────────────────────────────────
+// Common Patterns — 4 archetypal tiles
+// ─────────────────────────────────────────────────────────────
+
+const CP_PATTERNS = [
+  { bitmask4: 0b0000 },   // Isolated
+  { bitmask4: 0b1010 },   // H-Strip  (W+E)
+  { bitmask4: 0b0101 },   // V-Strip  (N+S)
+  { bitmask4: 0b1111 },   // Full
+];
 
 // ─────────────────────────────────────────────────────────────
 // Public API
 // ─────────────────────────────────────────────────────────────
 
-/**
- * Re-render the adjacency preview whenever images or settings change.
- * @param {{ images: Object, tileSize: number, algorithm: string }} state
- */
 export function renderPreview(state) {
-  const canvas = document.getElementById(CANVAS_ID);
+  const canvas = document.getElementById('preview-canvas');
   if (!canvas) return;
 
-  const { images, tileSize, algorithm } = state;
-  const ts     = Math.max(8, Math.min(tileSize, 128)); // cap preview tile size
-  const hasAny = Object.values(images).some(v => v !== null);
+  const { images, algorithm } = state;
+  const ts      = PREVIEW_DISPLAY_TS;
+  const PAD     = PREVIEW_PAD;
+  const LABEL_H = PREVIEW_LABEL_H;
+  const CP_GAP  = PREVIEW_CP_GAP;
+  const ROWS    = PREVIEW_GRID_ROWS;
+  const cols    = previewGridCols(algorithm);
+  const is47    = algorithm === '47';
+  const hasAny  = Object.values(images).some(v => v !== null);
 
-  // ── Common-patterns row (always 4 tiles, algorithm-independent) ──
-  const patterns = [
-    { label: 'Isolated', bitmask4: 0b0000 },
-    { label: 'H-Strip',  bitmask4: 0b1010 },
-    { label: 'V-Strip',  bitmask4: 0b0101 },
-    { label: 'Full',     bitmask4: 0b1111 },
-  ];
-
-  // ── Grid dimensions and label by algorithm ──
-  let gridCols, gridRows, gridLabel;
-  if (algorithm === '47') {
-    gridCols = 8; gridRows = 6; gridLabel = '47-Tile Set';
-  } else {
-    gridCols = 4; gridRows = 4; gridLabel = '16-Tile Set';
-  }
-
-  const patW   = patterns.length * (ts + PAD) - PAD;
-  const gridW  = gridCols * ts;
-  const gridH  = gridRows * ts;
-  const totalW = Math.max(patW, gridW) + PAD * 2;
-  const totalH = PAD + LABEL_H + ts + PAD * 3 + LABEL_H + gridH + PAD;
+  const totalW = PAD + ts + CP_GAP + cols * ts + PAD;
+  const totalH = PAD + LABEL_H + ROWS * ts + PAD;
 
   canvas.width  = totalW;
   canvas.height = totalH;
 
   const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, totalW, totalH);
-
-  // Dark background for the preview (transparent tiles will appear dark here)
   ctx.fillStyle = '#1a1a1a';
   ctx.fillRect(0, 0, totalW, totalH);
 
-  // ── Section 1: Common Patterns ──────────────────────────────
-  let curY = PAD;
-  drawLabel(ctx, PAD, curY, 'Common Patterns');
-  curY += LABEL_H;
+  // ── Section labels ───────────────────────────────────────────
+  drawLabel(ctx, PAD, PAD, 'Common');
+  drawLabel(ctx, PAD + ts + CP_GAP, PAD, is47 ? '47-Tile Set' : '16-Tile Set');
 
-  patterns.forEach((p, i) => {
-    const x = PAD + i * (ts + PAD);
+  const contentY = PAD + LABEL_H;
+
+  // ── Common Patterns column (vertical, left) ──────────────────
+  CP_PATTERNS.forEach((p, i) => {
+    const x = PAD;
+    const y = contentY + i * ts;
     if (hasAny) {
-      composeQuadrants(ctx, x, curY, ts, p.bitmask4, images);
-      drawNeighborDots(ctx, x, curY, ts, p.bitmask4);
+      composeQuadrants(ctx, x, y, ts, p.bitmask4, images);
+      drawNeighborDots(ctx, x, y, ts, p.bitmask4);
     } else {
-      drawPlaceholder(ctx, x, curY, ts, p.bitmask4);
+      drawPlaceholder(ctx, x, y, ts, p.bitmask4);
     }
   });
-  curY += ts + PAD * 3;
 
-  // ── Section 2: Algorithm-specific tile grid ──────────────────
-  drawLabel(ctx, PAD, curY, gridLabel);
-  curY += LABEL_H;
+  // ── Tile grid (4 rows × numCols, right) ──────────────────────
+  const gridX = PAD + ts + CP_GAP;
+  const gridY = contentY;
 
   if (hasAny) {
-    // Generate the full spritesheet for this algorithm and blit it into the preview.
-    const gridCanvas = algorithm === '47'
-      ? generate47(images, ts).canvas
-      : generate16(images, ts).canvas;
-
-    ctx.drawImage(gridCanvas, PAD, curY);
+    if (is47) {
+      // generate47 returns an 8-col canvas; remap tiles to 4-row display layout
+      const { canvas: src } = generate47(images, ts);
+      const SRC_COLS = 8;
+      for (let idx = 0; idx < 47; idx++) {
+        const sc = idx % SRC_COLS;
+        const sr = Math.floor(idx / SRC_COLS);
+        const dc = idx % cols;
+        const dr = Math.floor(idx / cols);
+        ctx.drawImage(src,
+          sc * ts, sr * ts, ts, ts,
+          gridX + dc * ts, gridY + dr * ts, ts, ts);
+      }
+    } else {
+      // generate16 returns a 4×4 canvas which already matches PREVIEW_GRID_ROWS
+      ctx.drawImage(generate16(images, ts).canvas, gridX, gridY);
+    }
   } else {
-    drawPlaceholderGrid(ctx, PAD, curY, gridCols, gridRows, ts);
+    drawPlaceholderGrid(ctx, gridX, gridY, cols, ROWS, ts);
   }
 }
 
 // ─────────────────────────────────────────────────────────────
-// Helpers
+// Drawing helpers
 // ─────────────────────────────────────────────────────────────
 
 function drawLabel(ctx, x, y, text) {
@@ -106,10 +120,6 @@ function drawLabel(ctx, x, y, text) {
   ctx.fillText(text, x, y + 11);
 }
 
-/**
- * Placeholder tile for when no images are uploaded.
- * Shading reflects how many neighbors are present.
- */
 function drawPlaceholder(ctx, x, y, ts, bitmask4) {
   const hasN = !!(bitmask4 & 0b0001);
   const hasE = !!(bitmask4 & 0b0010);
@@ -125,19 +135,14 @@ function drawPlaceholder(ctx, x, y, ts, bitmask4) {
   ctx.lineWidth   = 1;
   ctx.strokeRect(x + 0.5, y + 0.5, ts - 1, ts - 1);
 
-  // Edge highlight strips — present edges show orange, absent edges show nothing
   ctx.fillStyle = 'rgba(249,115,22,0.35)';
   const ew = Math.max(2, ts / 8);
-  if (hasN) ctx.fillRect(x,          y,          ts, ew);
-  if (hasS) ctx.fillRect(x,          y + ts - ew, ts, ew);
-  if (hasW) ctx.fillRect(x,          y,          ew, ts);
-  if (hasE) ctx.fillRect(x + ts - ew, y,          ew, ts);
+  if (hasN) ctx.fillRect(x,            y,            ts, ew);
+  if (hasS) ctx.fillRect(x,            y + ts - ew,  ts, ew);
+  if (hasW) ctx.fillRect(x,            y,            ew, ts);
+  if (hasE) ctx.fillRect(x + ts - ew,  y,            ew, ts);
 }
 
-/**
- * Placeholder grid of outlined squares when no images are loaded.
- * Each cell uses a subtle shade variation so the grid is visible.
- */
 function drawPlaceholderGrid(ctx, startX, startY, cols, rows, ts) {
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
@@ -155,10 +160,6 @@ function drawPlaceholderGrid(ctx, startX, startY, cols, rows, ts) {
   }
 }
 
-/**
- * Tiny dots at each cardinal edge showing which neighbors are present (orange)
- * or absent (dark), so the viewer can tell which tile variant this is.
- */
 function drawNeighborDots(ctx, x, y, ts, bitmask4) {
   const hasN = !!(bitmask4 & 0b0001);
   const hasE = !!(bitmask4 & 0b0010);
@@ -169,10 +170,10 @@ function drawNeighborDots(ctx, x, y, ts, bitmask4) {
   const m = r + 1;
 
   [
-    { cx: x + ts / 2, cy: y + m,       has: hasN },
-    { cx: x + ts - m, cy: y + ts / 2,  has: hasE },
-    { cx: x + ts / 2, cy: y + ts - m,  has: hasS },
-    { cx: x + m,      cy: y + ts / 2,  has: hasW },
+    { cx: x + ts / 2,  cy: y + m,       has: hasN },
+    { cx: x + ts - m,  cy: y + ts / 2,  has: hasE },
+    { cx: x + ts / 2,  cy: y + ts - m,  has: hasS },
+    { cx: x + m,       cy: y + ts / 2,  has: hasW },
   ].forEach(({ cx, cy, has }) => {
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);

@@ -24,13 +24,18 @@
   "preview.title": "相邻预览",
   "preview.hint":  "上传图片后自动更新。",
 
-  "export.title":  "精灵图",
+  "export.title":  "输出",
   "export.png":   "导出 PNG",
   "export.unity": "导出 Unity 包",
 
   "zoom.in":    "+",
   "zoom.out":   "−",
   "zoom.reset": "1×",
+
+  "tilemap.title": "自由配置预览",
+  "tilemap.hint":  "点击或拖拽来放置/移除图块，位掩码自动更新。",
+  "tilemap.clear": "清空",
+  "tilemap.fill":  "全部填充",
 
   "footer.license": "生成的内容归用户所有，不提供担保，无需署名。",
 

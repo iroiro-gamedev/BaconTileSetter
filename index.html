@@ -7,7 +7,13 @@
   <meta property="og:title" content="BaconTileSetter" />
   <meta property="og:description" content="Generate 16-tile, 47-tile and Wang tilesets in your browser." />
   <meta property="og:image" content="Image/OPG.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="BaconTileSetter" />
+  <meta name="twitter:description" content="Generate 16-tile, 47-tile and Wang tilesets in your browser." />
+  <meta name="twitter:image" content="Image/OPG.png" />
   <title>BaconTileSetter</title>
   <link rel="icon" type="image/png" href="Image/Favicon.png" />
   <link rel="stylesheet" href="css/style.css" />
@@ -180,18 +186,28 @@
       </div>
     </section>
 
-    <!-- Export Panel (auto-shown after first image upload) -->
+    <!-- Tile Placement Preview Panel -->
+    <section class="panel tilemap-panel">
+      <h2 class="panel-title" data-i18n="tilemap.title">Tile Placement Preview</h2>
+      <p class="panel-hint" data-i18n="tilemap.hint">Click or drag to place / remove tiles.</p>
+      <div class="tilemap-controls">
+        <div class="zoom-bar">
+          <button class="zoom-btn" id="tilemap-zoom-out"   data-i18n="zoom.out">−</button>
+          <span   class="zoom-label" id="tilemap-zoom-label">1×</span>
+          <button class="zoom-btn" id="tilemap-zoom-in"    data-i18n="zoom.in">+</button>
+          <button class="zoom-btn zoom-reset" id="tilemap-zoom-reset" data-i18n="zoom.reset">1×</button>
+        </div>
+        <button class="btn-secondary" id="tilemap-clear" data-i18n="tilemap.clear">Clear</button>
+        <button class="btn-secondary" id="tilemap-fill"  data-i18n="tilemap.fill">Fill All</button>
+      </div>
+      <div class="tilemap-canvas-wrap">
+        <canvas id="tilemap-canvas"></canvas>
+      </div>
+    </section>
+
+    <!-- Export Panel (shown after first image upload) -->
     <section class="panel export-panel" id="export-panel" hidden>
       <h2 class="panel-title" data-i18n="export.title">Spritesheet</h2>
-      <div class="zoom-bar">
-        <button class="zoom-btn" id="spritesheet-zoom-out"   data-i18n="zoom.out">−</button>
-        <span   class="zoom-label" id="spritesheet-zoom-label">2×</span>
-        <button class="zoom-btn" id="spritesheet-zoom-in"    data-i18n="zoom.in">+</button>
-        <button class="zoom-btn zoom-reset" id="spritesheet-zoom-reset" data-i18n="zoom.reset">1×</button>
-      </div>
-      <div class="canvas-wrap spritesheet-wrap">
-        <canvas id="spritesheet-canvas"></canvas>
-      </div>
       <div class="export-buttons">
         <button id="export-png"   class="btn-secondary" data-i18n="export.png">Export PNG</button>
         <button id="export-unity" class="btn-secondary" data-i18n="export.unity">Export Unity Package</button>
@@ -202,8 +218,24 @@
 
   <footer class="footer">
     <p data-i18n="footer.license">Generated content belongs to the user. No warranty. No credit required.</p>
-    <p>© 2024 <a href="about.html">iroiro</a></p>
+    <p>© 2024 <a href="about.html">iroiro</a> &nbsp;·&nbsp; v0.1.0</p>
   </footer>
+
+  <!-- Tile hover tooltip (adjacency preview) -->
+  <div id="tile-tooltip" class="tile-tooltip" hidden>
+    <div class="tt-grid">
+      <div class="tt-cell" data-pos="nw"></div>
+      <div class="tt-cell" data-pos="n"></div>
+      <div class="tt-cell" data-pos="ne"></div>
+      <div class="tt-cell" data-pos="w"></div>
+      <div class="tt-cell tt-self"></div>
+      <div class="tt-cell" data-pos="e"></div>
+      <div class="tt-cell" data-pos="sw"></div>
+      <div class="tt-cell" data-pos="s"></div>
+      <div class="tt-cell" data-pos="se"></div>
+    </div>
+    <div class="tt-label" id="tt-label"></div>
+  </div>
 
   <script type="module" src="js/main.js"></script>
 </body>
